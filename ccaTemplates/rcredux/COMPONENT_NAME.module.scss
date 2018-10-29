@@ -1,0 +1,8 @@
+@import "sass-rem";
+@import "~styles/mixins";
+@import "~styles/variables";
+
+.component_name,
+.component_name > * {
+  border: 1px solid #f00;
+}
