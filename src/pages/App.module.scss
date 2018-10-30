@@ -1,0 +1,7 @@
+@import 'sass-rem';
+@import '~styles/mixins';
+
+.app,
+.app > * {
+  border: 1px solid red;
+}

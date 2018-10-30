@@ -1,0 +1,126 @@
+@mixin size($w: false, $h: false, $line-height: false) {
+  @if $w {
+    width: $w;
+  }
+
+  @if $h {
+    height: $h;
+  }
+
+  @if $line-height {
+    line-height: $line-height;
+  }
+}
+
+@mixin position(
+  $position,
+  $top: false,
+  $bottom: false,
+  $left: false,
+  $right: false,
+  $z-index: false
+) {
+  position: $position;
+
+  @if $top {
+    top: $top;
+  }
+
+  @if $bottom {
+    bottom: $bottom;
+  }
+
+  @if $left {
+    left: $left;
+  }
+
+  @if $right {
+    right: $right;
+  }
+
+  @if $z-index {
+    z-index: $z-index;
+  }
+}
+
+@mixin center {
+  @include position(absolute, $top: 50%, $left: 50%);
+
+  transform: translateX(-50%) translateY(-50%);
+}
+
+@mixin vertical-center($left: false, $right: false) {
+  @include position(absolute, 50%, false, $left, $right);
+
+  transform: translateY(-50%);
+}
+
+@mixin horizontal-center($top: false, $bottom: false, $type: false) {
+  @if $type == 'margin' {
+    margin: 0 auto;
+  } @else {
+    @include position(absolute, $top, $bottom, 50%, false);
+
+    transform: translateX(-50%);
+  }
+}
+
+@mixin flex-center($type: false) {
+  align-items: center;
+  justify-content: center;
+
+  @if $type == 'inline' {
+    display: inline-flex;
+  } @else {
+    display: flex;
+  }
+}
+
+@mixin text(
+  $family: false,
+  $size: false,
+  $weight: false,
+  $color: false,
+  $letter-space: false,
+  $line-height: false
+) {
+  @if $family {
+    font-family: $family;
+  }
+
+  @if $size {
+    font-size: $size;
+  }
+
+  @if $weight {
+    font-weight: $weight;
+  }
+
+  @if $color {
+    color: $color;
+  }
+
+  @if $letter-space {
+    letter-spacing: $letter-space;
+  }
+
+  @if $line-height {
+    line-height: $line-height;
+  }
+}
+
+@mixin draw($background: false, $border: false) {
+  @if $background {
+    background: $background;
+  }
+
+  @if $border {
+    border: $border;
+  }
+}
+
+@mixin text-overflow-hidden {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
