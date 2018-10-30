@@ -1,0 +1,18 @@
+{
+  "path": "/root",
+  "total": 3,
+  "fileList": [
+    {
+      "name": "new folder",
+      "isFolder": true
+    },
+    {
+      "name": "testFolderName",
+      "isFolder": true
+    },
+    {
+      "name": "video.mp4",
+      "isFolder": false
+    }
+  ]
+}

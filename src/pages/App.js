@@ -2,53 +2,41 @@ import React, { Component } from 'react'
 import classNames from 'classnames/bind'
 import styles from './App.module.scss'
 import { Tree } from 'antd'
+import { requestTreeNode } from '../api'
 
 const cx = classNames.bind(styles)
 const TreeNode = Tree.TreeNode
 
 class App extends Component {
   state = {
-    treeData: [
-      { title: 'Expand to load', key: '0' },
-      { title: 'Expand to load', key: '1' },
-      { title: 'Tree Node', key: '2', isLeaf: true },
-    ],
+    treeData: [],
   }
 
-  onLoadData = treeNode => {
-    console.log(treeNode)
-    return new Promise(resolve => {
-      if (treeNode.props.children) {
-        console.log('=====')
-        resolve()
-        return
-      }
-      setTimeout(() => {
-        treeNode.props.dataRef.children = [
-          { title: 'Child Node', key: `${treeNode.props.eventKey}-0` },
-          { title: 'Child Node', key: `${treeNode.props.eventKey}-1` },
-        ]
-        this.setState(prevState => ({
-          treeData: [...prevState.treeData],
-        }))
-        resolve()
-      }, 100)
-    })
+  componentDidMount = () => {
+    requestTreeNode('/root').then(root => this.setState({ treeData: root }))
   }
 
-  renderTreeNodes = data => {
-    return data.map(item => {
-      if (item.children) {
-        console.log('/////')
-        return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
-            {this.renderTreeNodes(item.children)}
-          </TreeNode>
-        )
-      }
-      return <TreeNode {...item} dataRef={item} />
-    })
-  }
+  onLoadData = treeNode =>
+    treeNode.props.children || treeNode.props.isLeaf
+      ? null
+      : requestTreeNode(treeNode.props.eventKey).then(sonNode => {
+          treeNode.props.dataRef.children = sonNode
+          this.setState({
+            treeData: [...this.state.treeData],
+          })
+        })
+
+  renderTreeNodes = data =>
+    data.map(item => (
+      <TreeNode
+        title={item.name}
+        key={item.path}
+        isLeaf={!item.isFolder}
+        dataRef={item}
+      >
+        {item.children ? this.renderTreeNodes(item.children) : null}
+      </TreeNode>
+    ))
 
   render() {
     return (
