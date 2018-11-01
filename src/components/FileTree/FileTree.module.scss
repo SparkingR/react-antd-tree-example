@@ -1,0 +1,21 @@
+@import 'sass-rem';
+@import '~styles/mixins';
+
+.file-tree,
+.file-tree > * {
+  // border: 1px solid red;
+}
+
+.file-tree {
+  @include size(100%, 250px);
+  @include draw($border: 1px solid #000);
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+:global {
+  .ant-tree-treenode-selected {
+    @include draw($background: rgba(116, 200, 254, 0.7));
+  }
+}

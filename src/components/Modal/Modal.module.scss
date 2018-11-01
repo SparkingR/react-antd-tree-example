@@ -1,0 +1,13 @@
+@import 'sass-rem';
+@import '~styles/mixins';
+
+.modal,
+.modal > * {
+  // border: 1px solid #f00;
+}
+
+:global {
+  .ant-modal-body {
+    padding-bottom: 0;
+  }
+}

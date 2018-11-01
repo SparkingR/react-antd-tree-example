@@ -1,4 +1,5 @@
 import axios from 'axios'
+import shortid from 'shortid'
 import { host } from './config'
 
 export const request = ({
@@ -23,6 +24,9 @@ export const requestTreeNode = nodePath =>
       return res.data.fileList.map(file => ({
         ...file,
         path: path + '/' + file.name,
+        id: shortid.generate(),
       }))
     })
     .catch(err => console.error(err))
+
+export const submitModelConfig = () => console.log('dummy')

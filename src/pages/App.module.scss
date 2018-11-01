@@ -3,5 +3,14 @@
 
 .app,
 .app > * {
-  border: 1px solid red;
+  // border: 1px solid #f00;
+}
+
+.upload-btn {
+  @include size(200px, 100px);
+  @include center;
+}
+
+.selected-file {
+  @include size(100%, 40px, 40px);
 }
