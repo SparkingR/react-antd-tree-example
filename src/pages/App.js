@@ -18,10 +18,11 @@ class App extends Component {
 
   // For Modal
   showModal = () => {
-    this.initTreeData()
     this.setState((prevState, props) => ({
       modalVisible: true,
+      fileTreeData: [],
     }))
+    setTimeout(this.initTreeData, 2000)
   }
 
   onCloseModal = () => {
@@ -41,6 +42,7 @@ class App extends Component {
         this.setState((prevState, props) => ({
           modalVisible: false,
           modalLoading: false,
+          selectedFile: '',
         }))
         resolve()
       }, 3000)

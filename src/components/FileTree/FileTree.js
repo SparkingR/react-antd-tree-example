@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames/bind'
 import styles from './FileTree.module.scss'
-import { Tree } from 'antd'
+import { Tree, Spin } from 'antd'
 import { isEmpty } from 'lodash'
 
 const cx = classNames.bind(styles)
@@ -18,8 +18,8 @@ class FileTree extends Component {
 
   static defaultProps = {
     className: '',
-    onLoadTreeNodeChild: () => ({}),
-    setSelectedFile: () => ({}),
+    onLoadTreeNodeChild: () => {},
+    setSelectedFile: () => {},
   }
 
   onSelect = (selectedKeys, event) => {
@@ -44,7 +44,11 @@ class FileTree extends Component {
 
   render() {
     const { className, fileTreeData, onLoadTreeNodeChild } = this.props
-    return (
+    return isEmpty(fileTreeData) ? (
+      <div className={cx('file-tree', className)}>
+        <Spin className={cx('spin')} tip="Loading..." />
+      </div>
+    ) : (
       <Tree
         className={cx('file-tree', className)}
         loadData={onLoadTreeNodeChild}
