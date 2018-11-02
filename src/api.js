@@ -1,6 +1,6 @@
 import axios from 'axios'
 import shortid from 'shortid'
-import { host } from './config'
+import { FAKE_API_ROOT as host } from './config'
 
 export const request = ({
   method = 'get',
