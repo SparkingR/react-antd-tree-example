@@ -3,6 +3,7 @@
     "react-app"
   ],
   "plugins": [
+    "lodash",
     ["import", {
       "libraryName": "antd",
       "libraryDirectory": "es",
