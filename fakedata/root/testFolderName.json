@@ -1,0 +1,31 @@
+{
+  "path": "/root/testFolderName",
+  "total": 10,
+  "fileList": [
+    {
+      "name": "myfolder1",
+      "isFolder": true
+    },
+    {
+      "name": "myfolder2",
+      "isFolder": true
+    },
+    {
+      "name": "myfolder3",
+      "isFolder": true
+    },
+    {
+      "name": "IMG_123.jpg",
+      "isFolder": false
+    },
+
+    {
+      "name": "IMG_124.jpg",
+      "isFolder": false
+    },
+    {
+      "name": "IMG_125.jpg",
+      "isFolder": false
+    }
+  ]
+}
