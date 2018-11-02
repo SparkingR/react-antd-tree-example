@@ -2,6 +2,7 @@
   "name": "react-antd-tree-example",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://SparkingR.github.io/react-antd-tree-example",
   "dependencies": {
     "@babel/core": "7.1.0",
     "@svgr/webpack": "2.4.1",
@@ -31,6 +32,7 @@
     "eslint-plugin-react": "7.11.1",
     "file-loader": "2.0.0",
     "fs-extra": "7.0.0",
+    "gh-pages": "^2.0.1",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "husky": "^1.1.2",
     "identity-obj-proxy": "3.0.0",
@@ -70,7 +72,9 @@
     "test": "node scripts/test.js",
     "rfep": "create-component-app --template rfep",
     "rcep": "create-component-app --template rcep",
-    "rcredux": "create-component-app --template rcredux"
+    "rcredux": "create-component-app --template rcredux",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "husky": {
     "hooks": {
