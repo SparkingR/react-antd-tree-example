@@ -22,6 +22,8 @@ class App extends Component {
       modalVisible: true,
       fileTreeData: [],
     }))
+
+    // async
     setTimeout(this.initTreeData, 2000)
   }
 
@@ -36,6 +38,8 @@ class App extends Component {
     this.setState((prevState, props) => ({
       modalLoading: true,
     }))
+
+    // async
     // submitModelConfig()
     return new Promise(resolve => {
       setTimeout(() => {
