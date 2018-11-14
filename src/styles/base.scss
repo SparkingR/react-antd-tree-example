@@ -13,3 +13,13 @@
     'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
 }
+
+*:not(input) {
+  user-select: none;
+}
+
+html,
+body,
+#root {
+  @include size(100%, 100%);
+}

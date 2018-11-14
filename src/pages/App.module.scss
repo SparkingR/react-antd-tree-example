@@ -6,11 +6,21 @@
   // border: 1px solid #f00;
 }
 
+.app {
+  @include size(100%, 100%);
+  @include flex-center;
+
+  flex-direction: column;
+}
+
 .upload-btn {
   @include size(200px, 100px);
-  @include center;
 }
 
 .selected-file {
   @include size(100%, 40px, 40px);
+}
+
+.submit-file {
+  font-size: 24px;
 }

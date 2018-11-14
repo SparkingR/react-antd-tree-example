@@ -9,24 +9,28 @@ const cx = classNames.bind(styles)
 class Modal extends Component {
   static propTypes = {
     className: PropTypes.string,
-    visible: PropTypes.bool.isRequired,
+    visible: PropTypes.bool,
     width: PropTypes.string,
     title: PropTypes.string,
     cancelBtnText: PropTypes.string,
     okBtnText: PropTypes.string,
-    loading: PropTypes.bool.isRequired,
+    loading: PropTypes.bool,
     prepareToSubmit: PropTypes.bool,
-    onModalOk: PropTypes.func.isRequired,
-    onCloseModal: PropTypes.func.isRequired,
+    onModalOk: PropTypes.func,
+    onModalClose: PropTypes.func,
   }
 
   static defaultProps = {
     className: '',
+    visible: true,
     width: '50%',
     title: '',
     cancelBtnText: 'Cancel',
     okBtnText: 'Ok',
+    loading: false,
     prepareToSubmit: true,
+    onModalOk: () => {},
+    onModalClose: () => {},
   }
 
   handleOk = () => {
@@ -34,7 +38,7 @@ class Modal extends Component {
   }
 
   handleCancel = () => {
-    !this.props.loading && this.props.onCloseModal()
+    !this.props.loading && this.props.onModalClose()
   }
 
   render() {
@@ -57,6 +61,7 @@ class Modal extends Component {
         onOk={this.handleOk}
         onCancel={this.handleCancel}
         centered
+        destroyOnClose
         footer={[
           <Button key="cancel" disabled={loading} onClick={this.handleCancel}>
             {cancelBtnText}

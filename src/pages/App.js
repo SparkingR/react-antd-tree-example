@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import classNames from 'classnames/bind'
 import styles from './App.module.scss'
+
 import { Button } from 'antd'
 import Modal from '../components/Modal/Modal'
 import FileTree from '../components/FileTree/FileTree'
-import { requestTreeNode, submitModelConfig } from '../api'
+import { getNodeChild } from '../api'
+import { rootFolder } from '../config'
 
 const cx = classNames.bind(styles)
 
@@ -13,21 +15,16 @@ class App extends Component {
     modalVisible: false,
     modalLoading: false,
     selectedFile: '',
-    fileTreeData: [],
+    submitFile: '',
   }
 
-  // For Modal
   showModal = () => {
     this.setState((prevState, props) => ({
       modalVisible: true,
-      fileTreeData: [],
     }))
-
-    // async
-    setTimeout(this.initTreeData, 2000)
   }
 
-  onCloseModal = () => {
+  onModalClose = () => {
     this.setState((prevState, props) => ({
       modalVisible: false,
       selectedFile: '',
@@ -39,38 +36,16 @@ class App extends Component {
       modalLoading: true,
     }))
 
-    // async
-    // submitModelConfig()
-    return new Promise(resolve => {
-      setTimeout(() => {
-        this.setState((prevState, props) => ({
-          modalVisible: false,
-          modalLoading: false,
-          selectedFile: '',
-        }))
-        resolve()
-      }, 3000)
-    })
-  }
-
-  // For FileTree
-  initTreeData = () => {
-    requestTreeNode('/root').then(treeRoot =>
+    // aync request simulation
+    setTimeout(() => {
       this.setState((prevState, props) => ({
-        fileTreeData: treeRoot,
+        modalVisible: false,
+        modalLoading: false,
+        selectedFile: '',
+        submitFile: prevState.selectedFile,
       }))
-    )
+    }, 500)
   }
-
-  onLoadTreeNodeChild = treeNode =>
-    treeNode.props.children || treeNode.props.isLeaf
-      ? null
-      : requestTreeNode(treeNode.props.path).then(childNodes => {
-          treeNode.props.dataRef.children = childNodes
-          this.setState({
-            fileTreeData: [...this.state.fileTreeData],
-          })
-        })
 
   setSelectedFile = path => {
     this.setState((prevState, props) => ({
@@ -79,37 +54,36 @@ class App extends Component {
   }
 
   render() {
-    const {
-      modalVisible,
-      modalLoading,
-      selectedFile,
-      fileTreeData,
-    } = this.state
+    const { modalVisible, modalLoading, selectedFile, submitFile } = this.state
     return (
       <div className={cx('app')}>
+        <div className={cx('submit-file')}>
+          {submitFile ? 'Submit : ' + submitFile : null}
+        </div>
         <Button
           className={cx('upload-btn')}
           type="primary"
           onClick={this.showModal}
         >
-          Choose a file
+          Show Modal
         </Button>
+
         <Modal
           visible={modalVisible}
-          title={'Please choose a file'}
+          title={'Please choose a file or a folder'}
           okBtnText={'Submit'}
           loading={modalLoading}
-          prepareToSubmit={selectedFile.length > 0}
-          onCloseModal={this.onCloseModal}
+          prepareToSubmit={Boolean(selectedFile.length)}
+          onModalClose={this.onModalClose}
           onModalOk={this.onModalOk}
         >
           <FileTree
-            fileTreeData={fileTreeData}
+            initTreeRoot={() => getNodeChild(rootFolder)}
+            getNodeChild={getNodeChild}
             setSelectedFile={this.setSelectedFile}
-            onLoadTreeNodeChild={this.onLoadTreeNodeChild}
           />
           <div className={cx('selected-file')}>
-            {selectedFile ? 'Selected file : ' + selectedFile : null}
+            {selectedFile ? 'Selected : ' + selectedFile : null}
           </div>
         </Modal>
       </div>

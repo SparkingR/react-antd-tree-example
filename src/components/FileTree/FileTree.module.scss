@@ -11,8 +11,7 @@
   @include position(relative);
   @include draw($border: 1px solid #000);
 
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: auto;
 }
 
 .spin {
@@ -20,7 +19,7 @@
 }
 
 :global {
-  .ant-tree-treenode-selected {
-    @include draw($background: rgba(116, 200, 254, 0.7));
+  .ant-tree-node-content-wrapper {
+    width: calc(100% - 30px);
   }
 }
