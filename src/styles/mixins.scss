@@ -1,14 +1,10 @@
-@mixin size($w: false, $h: false, $line-height: false) {
+@mixin size($w: false, $h: false) {
   @if $w {
     width: $w;
   }
 
   @if $h {
     height: $h;
-  }
-
-  @if $line-height {
-    line-height: $line-height;
   }
 }
 
@@ -43,12 +39,6 @@
   }
 }
 
-@mixin center {
-  @include position(absolute, $top: 50%, $left: 50%);
-
-  transform: translateX(-50%) translateY(-50%);
-}
-
 @mixin vertical-center($left: false, $right: false) {
   @include position(absolute, 50%, false, $left, $right);
 
@@ -57,7 +47,8 @@
 
 @mixin horizontal-center($top: false, $bottom: false, $type: false) {
   @if $type == 'margin' {
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
   } @else {
     @include position(absolute, $top, $bottom, 50%, false);
 
@@ -65,15 +56,34 @@
   }
 }
 
-@mixin flex-center($type: false) {
+@mixin center {
+  @include position(absolute, $top: 50%, $left: 50%);
+
+  transform: translateX(-50%) translateY(-50%);
+}
+
+@mixin content-vertical-center($type: false, $line-height: false) {
+  @if $type == 'inline' and $line-height {
+    line-height: $line-height;
+  } @else if {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@mixin content-horizontal-center($type: false) {
+  @if $type == 'inline' {
+    text-align: center;
+  } @else if {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@mixin content-center {
+  display: flex;
   align-items: center;
   justify-content: center;
-
-  @if $type == 'inline' {
-    display: inline-flex;
-  } @else {
-    display: flex;
-  }
 }
 
 @mixin text(

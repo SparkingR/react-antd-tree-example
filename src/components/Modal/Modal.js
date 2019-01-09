@@ -1,83 +1,91 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames/bind'
 import styles from './Modal.module.scss'
-import { Modal as AntdModal, Button } from 'antd'
+import { Modal as AntdModal } from 'antd'
+
+import ModalHeader from './ModalHeader/ModalHeader'
+import ModalFooter from './ModalFooter/ModalFooter'
 
 const cx = classNames.bind(styles)
 
-class Modal extends Component {
+class Modal extends PureComponent {
   static propTypes = {
     className: PropTypes.string,
-    visible: PropTypes.bool,
     width: PropTypes.string,
     title: PropTypes.string,
     cancelBtnText: PropTypes.string,
     okBtnText: PropTypes.string,
-    loading: PropTypes.bool,
-    prepareToSubmit: PropTypes.bool,
+    isVisible: PropTypes.bool,
+    isReadyToSubmit: PropTypes.bool,
     onModalOk: PropTypes.func,
-    onModalClose: PropTypes.func,
+    onModalCancel: PropTypes.func,
   }
 
   static defaultProps = {
     className: '',
-    visible: true,
     width: '50%',
     title: '',
     cancelBtnText: 'Cancel',
-    okBtnText: 'Ok',
-    loading: false,
-    prepareToSubmit: true,
+    okBtnText: '',
+    isVisible: true,
+    isReadyToSubmit: true,
     onModalOk: () => {},
-    onModalClose: () => {},
+    onModalCancel: () => {},
   }
 
-  handleOk = () => {
-    this.props.onModalOk()
+  state = {
+    loading: false,
+  }
+
+  handleOk = async () => {
+    this.setState((prevState, props) => ({
+      loading: true,
+    }))
+    await this.props.onModalOk()
+    this.setState((prevState, props) => ({
+      loading: false,
+    }))
   }
 
   handleCancel = () => {
-    !this.props.loading && this.props.onModalClose()
+    !this.state.loading && this.props.onModalCancel()
   }
 
   render() {
+    const { loading } = this.state
     const {
       className,
-      visible,
+      children,
       width,
       title,
       cancelBtnText,
       okBtnText,
-      loading,
-      prepareToSubmit,
+      isVisible,
+      isReadyToSubmit,
+      onModalCancel,
     } = this.props
+
     return (
       <AntdModal
         className={cx('modal', className)}
-        visible={visible}
         width={width}
-        title={title}
-        onOk={this.handleOk}
-        onCancel={this.handleCancel}
+        visible={isVisible}
+        footer={null}
+        mask={false}
         centered
         destroyOnClose
-        footer={[
-          <Button key="cancel" disabled={loading} onClick={this.handleCancel}>
-            {cancelBtnText}
-          </Button>,
-          <Button
-            key="ok"
-            type="primary"
-            loading={loading}
-            disabled={!prepareToSubmit}
-            onClick={this.handleOk}
-          >
-            {okBtnText}
-          </Button>,
-        ]}
       >
-        {this.props.children}
+        <ModalHeader title={title} onModalCancel={onModalCancel} />
+        {children}
+        <ModalFooter
+          isReadyToSubmit={isReadyToSubmit}
+          isSubmitting={loading}
+          okBtnText={okBtnText}
+          cancelBtnText={cancelBtnText}
+          handleOk={this.handleOk}
+          handleCancel={this.handleCancel}
+        />
       </AntdModal>
     )
   }

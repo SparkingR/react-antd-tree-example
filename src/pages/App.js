@@ -7,54 +7,57 @@ import Modal from '../components/Modal/Modal'
 import FileTree from '../components/FileTree/FileTree'
 import { getNodeChild } from '../api'
 import { rootFolder } from '../config'
+import { sleep } from '../utils'
 
 const cx = classNames.bind(styles)
 
 class App extends Component {
   state = {
-    modalVisible: false,
-    modalLoading: false,
+    isModalOpen: false,
+    isReadyToSubmit: false,
     selectedFile: '',
     submitFile: '',
   }
 
-  showModal = () => {
+  openModal = () => {
     this.setState((prevState, props) => ({
-      modalVisible: true,
+      isModalOpen: true,
     }))
   }
 
-  onModalClose = () => {
+  onModalCancel = () => {
     this.setState((prevState, props) => ({
-      modalVisible: false,
+      isModalOpen: false,
       selectedFile: '',
+      isReadyToSubmit: false,
     }))
   }
 
-  onModalOk = () => {
-    this.setState((prevState, props) => ({
-      modalLoading: true,
-    }))
-
-    // aync request simulation
-    setTimeout(() => {
+  // aync request simulation
+  onModalOk = () =>
+    sleep(1000).then(() => {
       this.setState((prevState, props) => ({
-        modalVisible: false,
-        modalLoading: false,
+        isModalOpen: false,
         selectedFile: '',
         submitFile: prevState.selectedFile,
+        isReadyToSubmit: false,
       }))
-    }, 500)
-  }
+    })
 
   setSelectedFile = path => {
     this.setState((prevState, props) => ({
       selectedFile: path,
+      isReadyToSubmit: true,
     }))
   }
 
   render() {
-    const { modalVisible, modalLoading, selectedFile, submitFile } = this.state
+    const {
+      isModalOpen,
+      selectedFile,
+      submitFile,
+      isReadyToSubmit,
+    } = this.state
     return (
       <div className={cx('app')}>
         <div className={cx('submit-file')}>
@@ -63,18 +66,17 @@ class App extends Component {
         <Button
           className={cx('upload-btn')}
           type="primary"
-          onClick={this.showModal}
+          onClick={this.openModal}
         >
           Show Modal
         </Button>
 
         <Modal
-          visible={modalVisible}
+          isVisible={isModalOpen}
           title={'Please choose a file or a folder'}
           okBtnText={'Submit'}
-          loading={modalLoading}
-          prepareToSubmit={Boolean(selectedFile.length)}
-          onModalClose={this.onModalClose}
+          isReadyToSubmit={isReadyToSubmit}
+          onModalCancel={this.onModalCancel}
           onModalOk={this.onModalOk}
         >
           <FileTree

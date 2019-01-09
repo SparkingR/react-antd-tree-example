@@ -1,0 +1,45 @@
+@import 'sass-rem';
+@import '~styles/mixins';
+
+.modal-button {
+  @include size(100px, 30px);
+  @include content-center;
+  @include draw(#ffffff, 1px solid);
+  @include text('Roboto', 14px, 400);
+
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: 0.5s;
+
+  &__loading {
+    @include size(17px, 17px);
+
+    margin-right: 8px;
+    border-radius: 100%;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+    border-right: 2px solid rgba(0, 0, 0, 0.25);
+    border-top: 2px solid rgba(0, 0, 0, 0.25);
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.modal-button--normal {
+  border-color: #535353;
+  color: #2f2f2f;
+}
+
+.modal-button--disable {
+  borde-color: rgba(0, 0, 0, 0.25);
+  color: rgba(0, 0, 0, 0.25);
+}

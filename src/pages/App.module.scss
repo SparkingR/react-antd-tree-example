@@ -8,7 +8,7 @@
 
 .app {
   @include size(100%, 100%);
-  @include flex-center;
+  @include content-center;
 
   flex-direction: column;
 }
@@ -18,7 +18,8 @@
 }
 
 .selected-file {
-  @include size(100%, 40px, 40px);
+  @include size(100%, 40px);
+  line-height: 40px;
 }
 
 .submit-file {

@@ -1,0 +1,27 @@
+@import 'sass-rem';
+@import '~styles/mixins';
+
+.modal-header {
+  @include size(100%, 58px);
+  @include position(relative);
+  @include draw(#fafafa);
+
+  border-radius: 4px 4px 0px 0px;
+  border-bottom: 1px solid #b0b0b0;
+
+  &__title {
+    @include vertical-center($left: 35px);
+    @include text('Roboto', 20px, 500, #2f2f2f);
+  }
+
+  &__close-button {
+    @include size(22.7px, 22.7px);
+    @include position(absolute, $top: 5.7px, $right: 5.7px);
+    @include content-center;
+    @include draw(transparent);
+
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+}

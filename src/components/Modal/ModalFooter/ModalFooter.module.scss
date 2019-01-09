@@ -1,0 +1,16 @@
+@import 'sass-rem';
+@import '~styles/mixins';
+
+.modal-footer {
+  @include size(100%, 72px);
+  @include position(relative);
+  @include draw(#fafafa);
+
+  &__ok-button {
+    @include position(absolute, $bottom: 21px, $right: 155px);
+  }
+
+  &__cancel-button {
+    @include position(absolute, $bottom: 21px, $right: 40px);
+  }
+}
