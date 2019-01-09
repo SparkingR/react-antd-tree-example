@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import classNames from 'classnames/bind'
 import styles from './App.module.scss'
-
 import { Button } from 'antd'
-import Modal from '../components/Modal/Modal'
+
 import FileTree from '../components/FileTree/FileTree'
+import Modal from '../components/Modal/Modal'
 import { getNodeChild } from '../api'
 import { rootFolder } from '../config'
-import { sleep } from '../utils'
+import { delay } from '../utils'
 
 const cx = classNames.bind(styles)
 
 class App extends Component {
   state = {
     isModalOpen: false,
-    isReadyToSubmit: false,
+    isModalReadyToSubmit: false,
     selectedFile: '',
     submitFile: '',
   }
@@ -25,39 +25,38 @@ class App extends Component {
     }))
   }
 
-  onModalCancel = () => {
+  closeModal = () => {
     this.setState((prevState, props) => ({
       isModalOpen: false,
+      isModalReadyToSubmit: false,
       selectedFile: '',
-      isReadyToSubmit: false,
     }))
   }
 
-  // aync request simulation
-  onModalOk = () =>
-    sleep(1000).then(() => {
-      this.setState((prevState, props) => ({
-        isModalOpen: false,
-        selectedFile: '',
-        submitFile: prevState.selectedFile,
-        isReadyToSubmit: false,
-      }))
-    })
+  onModalSubmit = () => {
+    this.setState((prevState, props) => ({
+      isModalOpen: false,
+      isModalReadyToSubmit: false,
+      selectedFile: '',
+      submitFile: prevState.selectedFile,
+    }))
+  }
 
   setSelectedFile = path => {
     this.setState((prevState, props) => ({
+      isModalReadyToSubmit: true,
       selectedFile: path,
-      isReadyToSubmit: true,
     }))
   }
 
   render() {
     const {
       isModalOpen,
+      isModalReadyToSubmit,
       selectedFile,
       submitFile,
-      isReadyToSubmit,
     } = this.state
+
     return (
       <div className={cx('app')}>
         <div className={cx('submit-file')}>
@@ -72,21 +71,26 @@ class App extends Component {
         </Button>
 
         <Modal
+          width={'600px'}
+          className={cx('file-tree-with-modal')}
+          title="Please choose a file"
+          okBtnText="Submit"
+          cancelBtnText="Cancel"
           isVisible={isModalOpen}
-          title={'Please choose a file or a folder'}
-          okBtnText={'Submit'}
-          isReadyToSubmit={isReadyToSubmit}
-          onModalCancel={this.onModalCancel}
-          onModalOk={this.onModalOk}
+          isReadyToSubmit={isModalReadyToSubmit}
+          onModalCancel={this.closeModal}
+          onModalOk={delay(1000)(this.onModalSubmit)}
         >
-          <FileTree
-            initTreeRoot={() => getNodeChild(rootFolder)}
-            getNodeChild={getNodeChild}
-            setSelectedFile={this.setSelectedFile}
-          />
-          <div className={cx('selected-file')}>
-            {selectedFile ? 'Selected : ' + selectedFile : null}
-          </div>
+          {modalState => (
+            <FileTree
+              selectableType={'file'}
+              isDisabled={modalState.loading}
+              rootFolder={rootFolder}
+              getNodeChild={delay(500)(getNodeChild)}
+              selectedFile={selectedFile}
+              setSelectedFile={this.setSelectedFile}
+            />
+          )}
         </Modal>
       </div>
     )

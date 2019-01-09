@@ -2,7 +2,7 @@ import React from 'react'
 import Modal from './Modal'
 
 const withModal = WrappedComponent => {
-  const wrapWithModal = ({
+  const ComponentWrapWithModal = ({
     childClassName,
     className,
     width,
@@ -27,18 +27,21 @@ const withModal = WrappedComponent => {
         onModalOk={onModalOk}
         onModalCancel={onModalCancel}
       >
-        <WrappedComponent
-          className={childClassName}
-          isReadyToSubmit={isReadyToSubmit}
-          onModalOk={onModalOk}
-          onModalCancel={onModalCancel}
-          {...rest}
-        />
+        {modalState => (
+          <WrappedComponent
+            className={childClassName}
+            isReadyToSubmit={isReadyToSubmit}
+            onModalOk={onModalOk}
+            onModalCancel={onModalCancel}
+            modalState={modalState}
+            {...rest}
+          />
+        )}
       </Modal>
     )
   }
 
-  return wrapWithModal
+  return ComponentWrapWithModal
 }
 
 export default withModal

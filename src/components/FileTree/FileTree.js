@@ -1,75 +1,81 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames/bind'
 import styles from './FileTree.module.scss'
-
 import { Tree, Spin } from 'antd'
 import { isEmpty } from 'lodash'
 
 const cx = classNames.bind(styles)
+const DirectoryTree = Tree.DirectoryTree
 const TreeNode = Tree.TreeNode
 
-class FileTree extends Component {
+class FileTree extends PureComponent {
   static propTypes = {
     className: PropTypes.string,
-    fileSelectable: PropTypes.bool,
-    folderSelectable: PropTypes.bool,
-    initTreeRoot: PropTypes.func.isRequired,
-    getNodeChild: PropTypes.func,
+    isDisabled: PropTypes.bool,
+    selectableType: PropTypes.oneOf(['file', 'folder', 'both']),
+    selectedFile: PropTypes.string,
     setSelectedFile: PropTypes.func,
+    rootFolder: PropTypes.string.isRequired,
+    getNodeChild: PropTypes.func,
   }
 
   static defaultProps = {
     className: '',
-    fileSelectable: true,
-    folderSelectable: true,
-    getNodeChild: () => {},
+    isDisabled: false,
+    selectableType: 'both',
+    selectedFile: '',
     setSelectedFile: () => {},
+    getNodeChild: () => {},
   }
 
   state = {
     fileTreeData: [],
+    loading: false,
   }
 
-  componentDidMount = () => {
-    const { initTreeRoot } = this.props
-    initTreeRoot().then(treeRoot =>
-      // aync request simulation
-      setTimeout(() => {
-        this.setState((prevState, props) => ({
-          fileTreeData: treeRoot,
-          loading: false,
-        }))
-      }, 500)
-    )
+  // Todo : error handling
+  async componentDidMount() {
+    const { selectableType, rootFolder, getNodeChild } = this.props
+    this.setState((prevState, props) => ({
+      loading: true,
+    }))
+    const treeRoot = await getNodeChild(rootFolder)
+    this.setState((prevState, props) => ({
+      fileTreeData: treeRoot,
+      loading: false,
+      isFileSelectable: ['both', 'file'].includes(selectableType),
+      isFolderSelectable: ['both', 'folder'].includes(selectableType),
+    }))
   }
 
-  onClickNodeChild = treeNode => {
+  // Todo : error handling
+  onClickNode = treeNode => {
     const { getNodeChild } = this.props
-    return !treeNode.props.children && !treeNode.props.isLeaf
-      ? getNodeChild(treeNode.props.path).then(childNodes => {
-          treeNode.props.dataRef.children = childNodes
-          this.setState((prevState, props) => ({
-            fileTreeData: [...this.state.fileTreeData],
-          }))
-        })
-      : null
+    return getNodeChild(treeNode.props.path).then(childNodes => {
+      if (!childNodes) return Promise.resolve()
+      treeNode.props.dataRef.children = childNodes
+      this.setState((prevState, props) => ({
+        fileTreeData: [...this.state.fileTreeData],
+      }))
+    })
   }
 
   onSelect = (selectedKeys, event) => {
-    const { setSelectedFile } = this.props
-    setSelectedFile(!isEmpty(selectedKeys) ? event.node.props.path : '')
+    this.props.setSelectedFile(
+      !isEmpty(selectedKeys) ? event.node.props.path : ''
+    )
   }
 
   renderTreeNodes = data => {
-    const { fileSelectable, folderSelectable } = this.props
+    const { isFileSelectable, isFolderSelectable } = this.state
     return data.map(item => (
       <TreeNode
         title={item.name}
         key={item.path}
         path={item.path}
         isLeaf={!item.isFolder}
-        selectable={item.isFolder ? folderSelectable : fileSelectable}
+        selectable={item.isFolder ? isFolderSelectable : isFileSelectable}
         dataRef={item}
       >
         {item.children ? this.renderTreeNodes(item.children) : null}
@@ -77,21 +83,51 @@ class FileTree extends Component {
     ))
   }
 
-  render() {
+  renderTree = () => {
     const { fileTreeData } = this.state
-    const { className } = this.props
+    const { isDisabled, selectedFile, rootFolder } = this.props
+    let nowPath = selectedFile ? selectedFile : rootFolder.concat(' > ')
+    nowPath = nowPath.slice(1).replace(/\//g, ' > ')
+
     return isEmpty(fileTreeData) ? (
-      <div className={cx('file-tree', className)}>
-        <Spin className={cx('spin')} tip="Loading..." />
-      </div>
+      <div className={cx('file-tree__empty')}>Empty</div>
     ) : (
-      <Tree
-        className={cx('file-tree', className)}
-        loadData={this.onClickNodeChild}
-        onSelect={this.onSelect}
-      >
-        {this.renderTreeNodes(fileTreeData)}
-      </Tree>
+      <>
+        <div
+          className={cx(
+            'file-tree__selected-file',
+            nowPath.length < 80
+              ? 'file-tree__selected-file--normal-height'
+              : 'file-tree__selected-file--double-height'
+          )}
+        >
+          {nowPath}
+        </div>
+        <div className={cx('file-tree__tree')}>
+          <DirectoryTree
+            disabled={isDisabled}
+            loadData={this.onClickNode}
+            onSelect={this.onSelect}
+          >
+            {this.renderTreeNodes(fileTreeData)}
+          </DirectoryTree>
+        </div>
+      </>
+    )
+  }
+
+  render() {
+    const { loading } = this.state
+    const { className } = this.props
+
+    return (
+      <div className={cx('file-tree', className)}>
+        {loading ? (
+          <Spin className={cx('file-tree__spin')} tip="Loading..." />
+        ) : (
+          this.renderTree()
+        )}
+      </div>
     )
   }
 }

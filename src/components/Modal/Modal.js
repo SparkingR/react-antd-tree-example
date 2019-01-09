@@ -77,7 +77,7 @@ class Modal extends PureComponent {
         destroyOnClose
       >
         <ModalHeader title={title} onModalCancel={onModalCancel} />
-        {children}
+        {children(this.state)}
         <ModalFooter
           isReadyToSubmit={isReadyToSubmit}
           isSubmitting={loading}

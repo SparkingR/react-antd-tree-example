@@ -1,27 +1,22 @@
 @import 'sass-rem';
 @import '~styles/mixins';
 
-.app,
-.app > * {
-  // border: 1px solid #f00;
-}
-
 .app {
   @include size(100%, 100%);
   @include content-center;
 
   flex-direction: column;
-}
 
-.upload-btn {
-  @include size(200px, 100px);
-}
+  .upload-btn {
+    @include size(200px, 100px);
+  }
 
-.selected-file {
-  @include size(100%, 40px);
-  line-height: 40px;
-}
+  .submit-file {
+    font-size: 24px;
+  }
 
-.submit-file {
-  font-size: 24px;
+  .file-tree-with-modal {
+    /* width is defined by props */
+    height: 620px;
+  }
 }

@@ -1,0 +1,14 @@
+{
+  "path": "/root/testFolderName/myfolder1",
+  "total": 2,
+  "fileList": [
+    {
+      "name": "xxxxxxxx",
+      "isFolder": true
+    },
+    {
+      "name": "loooooooooooooooooooooooogNameloooooooooooooooooooooooogName.jpg",
+      "isFolder": false
+    }
+  ]
+}

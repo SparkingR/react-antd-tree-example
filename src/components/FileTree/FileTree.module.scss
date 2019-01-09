@@ -1,25 +1,48 @@
 @import 'sass-rem';
 @import '~styles/mixins';
 
-.file-tree,
-.file-tree > * {
-  // border: 1px solid red;
-}
-
 .file-tree {
-  @include size(100%, 250px);
+  @include size(100%, 400px);
   @include position(relative);
-  @include draw($border: 1px solid #000);
+  @include draw(#ffffff);
 
-  overflow: auto;
-}
+  &__spin {
+    @include center;
+  }
 
-.spin {
-  @include center;
-}
+  &__empty {
+    @include center;
+    @include text('Roboto', 60px, 400, #ffffff);
+    @include text-shadow;
+  }
 
-:global {
-  .ant-tree-node-content-wrapper {
-    width: calc(100% - 30px);
+  &__tree {
+    @include size(100%, 350px);
+
+    padding: 18px;
+    overflow: auto;
+  }
+
+  &__selected-file {
+    @include content-vertical-center;
+    @include text('Roboto', 14px, 400, #2f2f2f);
+
+    padding-left: 18px;
+    border-bottom: 1px solid #e5e5e5;
+    transition: 0.5s;
+
+    &--normal-height {
+      height: 36px;
+    }
+
+    &--double-height {
+      height: 72px;
+    }
   }
 }
+
+// :global {
+//   .ant-tree-node-content-wrapper {
+//     width: calc(100% - 30px);
+//   }
+// }
